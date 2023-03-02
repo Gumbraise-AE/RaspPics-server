@@ -11,6 +11,10 @@
            muted
     ></video>
 
+    {% for rasppic in rasp.raspPics %}
+        <img src="{{ vich_uploader_asset(rasppic, 'raspPic') }}" width="200">
+    {% endfor %}
+
     <script>
         let timeoutId;
         let isPassed = false;
