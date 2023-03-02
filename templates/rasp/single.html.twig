@@ -5,6 +5,10 @@
 {% set videoPath = "http://"~(user_ip == rasp.externIP or user_ip == "127.0.0.1" ? rasp.internIP : rasp.externIP)~":"~rasp.videoPort~"/stream.mp4" %}
 
 {% block body %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"
+            integrity="sha512-Ixzuzfxv1EqafeQlTCufWfaC6ful6WFqIz4G+dWvK0beHw0NVJwvCKSgafpy5gwNqKmgUfIBraVwkKI+Cz0SEQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <video src="{{ videoPath }}"
            id="raspStream"
            autoplay
@@ -12,9 +16,14 @@
     ></video>
 
     {% for rasppic in rasp.raspPics %}
-        <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" width="200">
+        <a href="{{ vich_uploader_asset(rasppic, 'picFile') }}" data-lightbox="picfile">
+            <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" width="200">
+        </a>
     {% endfor %}
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"
+            integrity="sha512-Ixzuzfxv1EqafeQlTCufWfaC6ful6WFqIz4G+dWvK0beHw0NVJwvCKSgafpy5gwNqKmgUfIBraVwkKI+Cz0SEQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         let timeoutId;
         let isPassed = false;
