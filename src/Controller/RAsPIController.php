@@ -42,7 +42,7 @@ class RAsPIController extends AbstractController
         $form->handleRequest($request);
 
         if (!$request->headers->has('Authorization')) {
-            dd($request->headers->get('Authorization'));
+            dd($request->headers);
             return new Response("#645 => " . Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
 
