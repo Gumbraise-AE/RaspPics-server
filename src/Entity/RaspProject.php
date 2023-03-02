@@ -37,7 +37,7 @@ class RaspProject
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'raspProject', targetEntity: RaspPic::class)]
-    #[ORM\OrderBy(["createdAt" => "ASC"])]
+    #[ORM\OrderBy(["createdAt" => "DESC"])]
     private Collection $raspPics;
 
     #[ORM\OneToOne(mappedBy: 'raspProject', cascade: ['persist', 'remove'])]
