@@ -41,12 +41,11 @@ class RAsPIController extends AbstractController
         $form = $this->createForm(RaspPicType::class, $raspPic);
         $form->handleRequest($request);
 
-        if (!$request->headers->has('Authorization')) {
-            dd($request->headers);
+        if (!$request->headers->has('RAsPI')) {
             return new Response("#645 => " . Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
 
-        $authorization = $authorizationRepository->findOneBy(['id' => $request->headers->get('Authorization')]);
+        $authorization = $authorizationRepository->findOneBy(['id' => $request->headers->get('RAsPI')]);
         if (!$authorization) {
             return new Response("#4563 => " . Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
