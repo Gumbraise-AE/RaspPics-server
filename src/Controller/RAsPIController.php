@@ -42,12 +42,12 @@ class RAsPIController extends AbstractController
         $form->handleRequest($request);
 
         if (!$request->headers->has('Authorization')) {
-            return new Response(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
+            return new Response("#645 => " . Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
 
         $authorization = $authorizationRepository->findOneBy(['id' => $request->headers->get('Authorization')]);
         if (!$authorization) {
-            return new Response(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
+            return new Response("#4563 => " . Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -55,7 +55,7 @@ class RAsPIController extends AbstractController
             $entityManager->persist($raspPic);
             $entityManager->flush();
 
-            return new Response(Response::$statusTexts[Response::HTTP_OK], Response::HTTP_OK);
+            return new Response("#8475 => " . Response::$statusTexts[Response::HTTP_OK], Response::HTTP_OK);
         }
 
         throw $this->createNotFoundException();
