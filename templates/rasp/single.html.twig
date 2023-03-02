@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RaspController!{% endblock %}
+
+{% set videoPath = "http://"~(user_ip == rasp.externIP or user_ip == "127.0.0.1" ? rasp.internIP : rasp.externIP)~":"~rasp.videoPort~"/stream.mp4" %}
+
+{% block body %}
+    <video src="{{ videoPath }}"
+           id="raspStream"
+           autoplay
+           muted
+    ></video>
+
+    <script>
+        let timeoutId;
+        let isPassed = false;
+
+        const element = document.getElementById('monElement');
+
+        const pauseVideo = () => {
+            clearTimeout(timeoutId);
+            if (isPassed === true) {
+                isPassed = false;
+                raspStream.src = "{{ videoPath }}";
+                raspStream.play();
+            }
+
+            timeoutId = setTimeout(function () {
+                isPassed = true;
+                raspStream.src = "";
+            }, 3000);
+        };
+
+        document.addEventListener('mousemove', () => {
+            pauseVideo()
+        });
+
+        window.onload = () => {
+            pauseVideo()
+        }
+
+    </script>
+{% endblock %}
