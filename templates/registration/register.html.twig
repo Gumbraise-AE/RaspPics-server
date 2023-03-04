@@ -3,15 +3,31 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
-
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
+    <div class="container px-4 mx-auto pt-24 space-y-12 md:space-y-24 max-w-screen-md">
+        <h1 class="text-3xl md:text-5xl font-extrabold pb-12 word-break text-center md:text-left">Register for free</h1>
+        <div class="text-black mx-auto space-y-5">
+            <div class="w-full md:w-1/2 mx-auto">
+                <div class="sr-only">{{ form_label(registrationForm.email) }}</div>
+                {{ form_widget(registrationForm.email, {
+                    label: 'Email',
+                    'attr':{'class':"w-full rounded-full p-4 outline-none font-bold text-center bg-white"}
+                }) }}
+            </div>
+            <div class="w-full md:w-1/2 mx-auto">
+                <div class="sr-only">{{ form_label(registrationForm.plainPassword) }}</div>
+                {{ form_widget(registrationForm.plainPassword, {
+                    label: 'Password',
+                    'attr':{'class':"w-full rounded-full p-4 outline-none font-bold text-center bg-white"}
+                }) }}
+            </div>
+            <div class="w-full md:w-1/2 mx-auto">
+                <button type="submit"
+                        class="w-full rounded-full p-4 outline-none font-bold text-center bg-white">
+                    Register
+                </button>
+            </div>
+        </div>
+    </div>
     {{ form_end(registrationForm) }}
 {% endblock %}
