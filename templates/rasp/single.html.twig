@@ -45,7 +45,7 @@
                     <div id="raspLastPicContainer" class="hidden h-min relative">
                         <div id="disconnectedLiveMessage"
                              class="bg-white/10 w-full h-full backdrop-blur-xl absolute z-10 rounded-xl items-center justify-center flex text-black p-4">
-                            <div class="text-center space-y-4">
+                            <div class="text-center space-y-4 w-full">
                                 <p class="text-3xl font-bold">You've been disconnected from the live video</p>
                                 <p class="text-xl">The bandwidth is not free</p>
                                 <div class="grid grid-cols-2 w-1/2 mx-auto pt-8">
@@ -59,6 +59,30 @@
                                             class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-r-lg py-2 duration-100">
                                         Look at the last pic
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="noVPNMessage"
+                             class="bg-white/10 w-full h-full backdrop-blur-xl absolute z-10 rounded-xl items-center justify-center flex text-black p-4">
+                            <div class="text-center space-y-4 w-full">
+                                <p class="text-3xl font-bold">It seems you don't have VPN</p>
+                                <p class="text-xl">Without it you can't watch the live</p>
+                                <p>
+                                    <a class="underline" target="_blank" href="https://www.wireguard.com/">Download WireGuard</a>
+                                    •
+                                    <a class="underline" target="_blank" href="{{ path('app_getvpnkey') }}">Download my secret key</a>
+                                </p>
+                                <div class="grid grid-cols-2 w-1/2 mx-auto pt-8">
+                                    <button onclick="seeLastPic()"
+                                            class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-l-lg py-2 duration-100">
+                                        Look at the last pic
+                                    </button>
+                                    <button onclick="discardDisconnectedLiveMessage()"
+                                            disabled
+                                            class="bg-lime-900 hover:bg-lime-800 text-lime-400 text-xs rounded-r-lg py-2 duration-100">
+                                        OMG WHAT HAPPENED ?
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -123,6 +147,8 @@
             isPassed = true;
             raspStream.classList.add('hidden');
             raspLastPicContainer.classList.remove('hidden');
+            noVPNMessage.classList.add('hidden');
+            disconnectedLiveMessage.classList.add('hidden');
         };
 
         const pauseVideo = () => {
@@ -150,11 +176,17 @@
         };
 
         document.addEventListener('mousemove', () => {
-            pauseVideo()
+            pauseVideo();
         });
 
         window.onload = () => {
-            pauseVideo()
+            if ("{{ user_ip }}" !== `93.90.193.225`) {
+                raspStream.classList.add('hidden');
+                raspLastPicContainer.classList.remove('hidden');
+                noVPNMessage.classList.remove('hidden');
+                raspStreamVideo.src = "";
+            }
+            pauseVideo();
         }
 
     </script>
