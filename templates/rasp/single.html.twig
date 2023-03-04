@@ -68,9 +68,11 @@
                                 <p class="text-3xl font-bold">It seems you don't have VPN</p>
                                 <p class="text-xl">Without it you can't watch the live</p>
                                 <p>
-                                    <a class="underline" target="_blank" href="https://www.wireguard.com/">Download WireGuard</a>
+                                    <a class="underline" target="_blank" href="https://www.wireguard.com/">Download
+                                        WireGuard</a>
                                     •
-                                    <a class="underline" target="_blank" href="{{ path('app_getvpnkey') }}">Download my secret key</a>
+                                    <a class="underline" target="_blank" href="{{ path('app_getvpnkey') }}">Download my
+                                        secret key</a>
                                 </p>
                                 <div class="grid grid-cols-2 w-1/2 mx-auto pt-8">
                                     <button onclick="seeLastPic()"
@@ -180,7 +182,7 @@
         });
 
         window.onload = () => {
-            if ("{{ user_ip }}" !== `93.90.193.225`) {
+            if (!("{{ user_ip }}" === "93.90.193.225" || "{{ user_ip }}" === "127.0.0.1" || "{{ user_ip }}" === "{{ rasp.externIP }}")) {
                 raspStream.classList.add('hidden');
                 raspLastPicContainer.classList.remove('hidden');
                 noVPNMessage.classList.remove('hidden');
