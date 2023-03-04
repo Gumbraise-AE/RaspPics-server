@@ -35,7 +35,7 @@ class RaspController extends AbstractController
         UploaderHelper    $uploaderHelper,
     ): Response
     {
-        $raspPics = $raspPicRepository->findBy(['raspProject' => $raspProject], ["createdAt" => "DESC"], 48);
+        $raspPics = array_reverse($raspPicRepository->findBy(['raspProject' => $raspProject], ["createdAt" => "DESC"], 48));
 
         // Créer un objet Imagick pour créer le GIF
         $imagick = new Imagick();
@@ -48,7 +48,7 @@ class RaspController extends AbstractController
             $frame = new Imagick();
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
             $frame->readImage($imagePath);
-            $frame->setImageDelay(25);
+            $frame->setImageDelay(10);
             $imagick->addImage($frame);
         }
 
