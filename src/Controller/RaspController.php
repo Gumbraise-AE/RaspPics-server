@@ -11,6 +11,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
@@ -21,6 +22,10 @@ class RaspController extends AbstractController
     #[Route('/{id}', name: 'app_single_rasp')]
     public function single(RaspProject $raspProject): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_index');
+        }
+
         return $this->render('rasp/single.html.twig', [
             'controller_name' => 'RaspController',
             'rasp' => $raspProject,
@@ -35,6 +40,10 @@ class RaspController extends AbstractController
         UploaderHelper    $uploaderHelper,
     ): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_index');
+        }
+
         $raspPics = array_reverse($raspPicRepository->findBy(['raspProject' => $raspProject], ["createdAt" => "DESC"], 48));
 
         // Créer un objet Imagick pour créer le GIF
