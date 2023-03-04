@@ -14,16 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api')]
 class RAsPIController extends AbstractController
 {
-    #[Route('/', name: 'app_index')]
-    public function index(
-        RaspAuthorizationRepository $authorizationRepository,
-    ): Response
-    {
-        return $this->render('api/index.html.twig', [
-            'apis' => $authorizationRepository->findAll(),
-        ]);
-    }
-
     /**
      * @param Request $request
      * @param EntityManagerInterface $entityManager
