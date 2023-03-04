@@ -47,7 +47,7 @@ class RaspController extends AbstractController
         foreach ($raspPics as $raspPic) {
             $frame = new Imagick();
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
-            $frame->setImageCompression(Imagick::COMPRESSION_JPEG);
+            $frame->setImageCompression(8);
             $frame->setImageCompressionQuality(50);
             $frame->readImage($imagePath);
             $frame->setImageDelay(10);
