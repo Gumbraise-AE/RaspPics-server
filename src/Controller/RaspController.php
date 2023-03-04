@@ -48,6 +48,8 @@ class RaspController extends AbstractController
             $frame = new Imagick();
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
             $frame->readImage($imagePath);
+            $frame->resizeImage(400, 300, Imagick::FILTER_LANCZOS, 1);
+            $imagick->setImageCompressionQuality(50);
             $frame->setImageDelay(10);
             $imagick->addImage($frame);
         }
