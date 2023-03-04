@@ -45,8 +45,7 @@ class RaspController extends AbstractController
         // Ajouter chaque image à l'objet Imagick
         foreach ($raspPics as $raspPic) {
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
-            $imageData = file_get_contents($imagePath);
-            dump($imageData);
+            dump($imagePath);
             $imagick->readImage($imagePath);
             $imagick->setImageDelay(25);
             $imagick->nextImage();
