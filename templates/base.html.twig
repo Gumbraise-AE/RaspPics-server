@@ -14,7 +14,8 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body class="bg-black text-white font-display">
+<body class="bg-black text-white font-display bg-cover bg-no-repeat"
+      style="background-image: url({{ asset('images/static/bands.svg') }})">
 {% block body %}{% endblock %}
 </body>
 </html>
