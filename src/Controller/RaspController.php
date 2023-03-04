@@ -39,18 +39,18 @@ class RaspController extends AbstractController
 
         // Créer un objet Imagick pour créer le GIF
         $imagick = new Imagick();
+        $imagick->setFormat('gif');
 
         $publicPath = $this->getParameter('kernel.project_dir') . '/public';
 
         // Ajouter chaque image à l'objet Imagick
         foreach ($raspPics as $raspPic) {
+            $frame = new Imagick();
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
-            dump($imagePath);
-            $imagick->readImage($imagePath);
-            $imagick->setImageDelay(25);
-            $imagick->nextImage();
+            $frame->readImage($imagePath);
+            $frame->setImageDelay(25);
+            $imagick->addImage($frame);
         }
-        die();
 
         // Écrire le GIF dans une variable
         $gifData = $imagick->getImagesBlob();
