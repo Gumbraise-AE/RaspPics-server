@@ -51,7 +51,7 @@ class RaspController extends AbstractController
             $frame->readImage($imagePath);
             $frame->resizeImage(800, 600, Imagick::FILTER_LANCZOS, 1);
             $frame->setImageCompressionQuality(20);
-            $frame->setImageDelay(10);
+            $frame->setImageDelay(5);
             $imagick->addImage($frame);
         }
 
