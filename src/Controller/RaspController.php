@@ -40,7 +40,6 @@ class RaspController extends AbstractController
         // Créer un objet Imagick pour créer le GIF
         $imagick = new Imagick();
         $imagick->setFormat('gif');
-        $imagick->setImageCompressionQuality(50);
 
         $publicPath = $this->getParameter('kernel.project_dir') . '/public';
 
@@ -54,6 +53,8 @@ class RaspController extends AbstractController
         }
 
         // Écrire le GIF dans une variable
+        $imagick->setImageCompressionQuality(50);
+
         $gifData = $imagick->getImagesBlob();
 
         // Renvoyer le GIF en tant que réponse HTTP
