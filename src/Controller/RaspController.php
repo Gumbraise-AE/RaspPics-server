@@ -23,7 +23,7 @@ class RaspController extends AbstractController
     public function single(RaspProject $raspProject): Response
     {
         if (!$this->getUser()) {
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('rasp/single.html.twig', [
