@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class RegistrationController extends AbstractController
 {
@@ -60,6 +61,32 @@ class RegistrationController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    #[Route(path: '/getvpnkey', name: 'app_getvpnkey')]
+    public function getvpnkey(): Response
+    {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_index');
+        }
+
+        $command = new Process(['cat', '/home/vpn/configs/' . $this->getUser()->getEmail() . '.conf']);
+        $command->run();
+
+        // Vérifie si la commande a réussi
+        if (!$command->isSuccessful()) {
+            throw new ProcessFailedException($command);
+        }
+
+        // Récupère la sortie de la commande
+        $output = $command->getOutput();
+
+        // Enregistre le contenu dans un fichier à télécharger
+        $filename = $this->getUser()->getEmail() . '.conf';
+        $response = new Response($output);
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+
+        return $response;
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
