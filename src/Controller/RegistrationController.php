@@ -70,16 +70,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_index');
         }
 
-        $command = new Process(['sudo cat', '/home/vpn/configs/' . $this->getUser()->getEmail() . '.conf']);
-        $command->run();
-
-        // Vérifie si la commande a réussi
-        if (!$command->isSuccessful()) {
-            throw new ProcessFailedException($command);
-        }
 
         // Récupère la sortie de la commande
-        $output = $command->getOutput();
+        $output = file_get_contents('/home/vpn/configs/' . $this->getUser()->getEmail() . '.conf');
 
         // Enregistre le contenu dans un fichier à télécharger
         $filename = $this->getUser()->getEmail() . '.conf';
