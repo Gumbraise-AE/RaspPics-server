@@ -9,17 +9,100 @@
           integrity="sha512-Woz+DqWYJ51bpVk5Fv0yES/edIMXjj3Ynda+KWTIkGoynAMHrqTcDUQltbipuiaD5ymEo9520lyoVOo9jCQOCA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-    <video src="{{ videoPath }}"
-           id="raspStream"
-           autoplay
-           muted
-    ></video>
+    <div class="container px-4 mx-auto pt-24 space-y-8">
+        <h1 class="text-5xl md:text-7xl font-extrabold pb-12 word-break text-center md:text-left">{{ rasp.title }}</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="col-span-1 relative">
+                <img src="{{ vich_uploader_asset(rasp.raspPics[0], 'picFile') }}"
+                     class="w-full blur-3xl absolute -z-10" alt="Last pic of {{ rasp.title }}">
+                <div>
+                    <div id="raspStream" class="block">
+                        <div class="bg-pourpre py-2 px-6 relative rounded-t-xl inline-flex gap-2 w-full items-baseline">
+                            <span class="relative flex h-3 w-3 self-center">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pourpre-light opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-pourpre-light"></span>
+                            </span>
+                            <h2 class="text-xs text-pourpre-light">Live video</h2>
+                        </div>
+                        <video src="{{ videoPath }}"
+                               class="w-full"
+                               autoplay
+                               muted
+                        ></video>
+                        <div class="relative w-full grid grid-cols-2">
+                            <button onclick="seeLastPic()"
+                                    class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-bl-lg py-2 duration-100">
+                                Look at the last pic
+                            </button>
+                            <button onclick="discardDisconnectedLiveMessage()"
+                                    disabled
+                                    class="bg-lime-900 hover:bg-lime-800 text-lime-400 text-xs rounded-br-lg py-2 duration-100">
+                                OMG WHAT HAPPENED ?
+                            </button>
+                        </div>
+                    </div>
+                    <div id="raspLastPicContainer" class="hidden h-min relative">
+                        <div id="disconnectedLiveMessage"
+                             class="bg-white/10 w-full h-full backdrop-blur-xl absolute z-10 rounded-xl items-center justify-center flex text-black p-4">
+                            <div class="text-center space-y-4">
+                                <p class="text-3xl font-bold">You've been disconnected from the live video</p>
+                                <p class="text-xl">The bandwidth is not free</p>
+                                <div class="grid grid-cols-2 w-1/2 mx-auto pt-8">
+                                    <button id="buttonGoBackLive"
+                                            onclick="playVideo()"
+                                            class="bg-pourpre-400 hover:bg-pourpre-300 text-pourpre-light text-xs rounded-l-lg py-2 duration-100">
+                                        Go back to live
+                                    </button>
+                                    <button id="buttonLookLastPic"
+                                            onclick="discardDisconnectedLiveMessage()"
+                                            class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-r-lg py-2 duration-100">
+                                        Look at the last pic
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="raspLastPic">
+                            <div class="bg-cyan-900 py-2 px-6 relative rounded-t-xl inline-flex gap-2 w-full items-baseline">
+                                <p class="text-xs text-cyan-400">Last picture of {{ rasp.title }}</p>
+                            </div>
+                            <img src="{{ vich_uploader_asset(rasp.raspPics[0], 'picFile') }}"
+                                 alt="Last pic of {{ rasp.title }}"
+                                 class="w-full"
+                            >
+                            <div class="relative w-full grid grid-cols-2">
+                                <button onclick="playVideo()"
+                                        class="bg-pourpre-400 hover:bg-pourpre-300 text-pourpre-light text-xs rounded-bl-lg py-2 duration-100">
+                                    Go back to live
+                                </button>
+                                <button onclick="discardDisconnectedLiveMessage()"
+                                        disabled
+                                        class="bg-lime-900 hover:bg-lime-800 text-lime-400 text-xs rounded-br-lg py-2 duration-100">
+                                    OMG WHAT HAPPENED ?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-1 relative">
+                <h2 class="text-3xl md:text-5xl font-bold pb-6 word-break text-center md:text-left">Last pictures
+                    of {{ rasp.title }}</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {% for rasppic in rasp.raspPics %}
+                        <a href="{{ vich_uploader_asset(rasppic, 'picFile') }}" data-lightbox="picfile">
+                            <figure>
+                                <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" class="w-full"
+                                     alt="{{ rasppic.createdAt|date('D, d M Y H:i:s') }}">
+                                <figcaption class="text-xs">{{ rasppic.createdAt|date('D, d M Y H:i:s') }}</figcaption>
+                            </figure>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
-    {% for rasppic in rasp.raspPics %}
-        <a href="{{ vich_uploader_asset(rasppic, 'picFile') }}" data-lightbox="picfile">
-            <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" width="200">
-        </a>
-    {% endfor %}
+
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.min.js"
             integrity="sha512-U9dKDqsXAE11UA9kZ0XKFyZ2gQCj+3AwZdBMni7yXSvWqLFEj8C1s7wRmWl9iyij8d5zb4wm56j4z/JVEwS77g=="
@@ -27,21 +110,42 @@
     <script>
         let timeoutId;
         let isPassed = false;
+        let raspStreamVideo = raspStream.getElementsByTagName('video')[0];
 
-        const element = document.getElementById('monElement');
+        const discardDisconnectedLiveMessage = () => {
+            clearTimeout(timeoutId);
+            disconnectedLiveMessage.classList.add('hidden');
+        };
+
+        const seeLastPic = () => {
+            clearTimeout(timeoutId);
+            isPassed = true;
+            raspStream.classList.add('hidden');
+            raspLastPicContainer.classList.remove('hidden');
+        };
 
         const pauseVideo = () => {
             clearTimeout(timeoutId);
+            if (isPassed === false) {
+                timeoutId = setTimeout(function () {
+                    isPassed = true;
+                    raspStream.classList.add('hidden');
+                    raspLastPicContainer.classList.remove('hidden');
+                    disconnectedLiveMessage.classList.remove('hidden');
+                    raspStreamVideo.src = "";
+                }, 10 * 60);
+            }
+        };
+
+        const playVideo = () => {
+            clearTimeout(timeoutId);
             if (isPassed === true) {
                 isPassed = false;
-                raspStream.src = "{{ videoPath }}";
-                raspStream.play();
+                raspStream.classList.remove('hidden');
+                raspLastPicContainer.classList.add('hidden');
+                raspStreamVideo.src = "{{ videoPath }}";
+                raspStreamVideo.play();
             }
-
-            timeoutId = setTimeout(function () {
-                isPassed = true;
-                raspStream.src = "";
-            }, 3000);
         };
 
         document.addEventListener('mousemove', () => {
