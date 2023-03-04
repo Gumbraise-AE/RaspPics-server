@@ -76,10 +76,10 @@ class RegistrationController extends AbstractController
 
         // Enregistre le contenu dans un fichier à télécharger
         $filename = $this->getUser()->getEmail() . '.conf';
-        $response = new Response($output);
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
-
-        return $response;
+        return new Response($output, 200, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
