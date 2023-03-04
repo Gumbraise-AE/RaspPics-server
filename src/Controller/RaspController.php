@@ -11,7 +11,6 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
@@ -50,8 +49,8 @@ class RaspController extends AbstractController
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
             $frame->readImage($imagePath);
             $frame->resizeImage(800, 600, Imagick::FILTER_LANCZOS, 1);
-            $frame->setImageCompressionQuality(0);
-            $frame->setImageDelay(5);
+            $frame->setImageCompressionQuality(20);
+            $frame->setImageDelay(0);
             $imagick->addImage($frame);
         }
 
@@ -61,9 +60,9 @@ class RaspController extends AbstractController
         $gifData = $imagick->getImagesBlob();
 
         // Renvoyer le GIF en tant que réponse HTTP
-        $response = new BinaryFileResponse($gifData);
-        $response->headers->set('Content-Type', 'image/gif');
-
-        return $response;
+        return new Response($gifData, 200, [
+            'Content-Type' => 'image/gif',
+            'Content-Disposition' => 'attachment; filename="raspPics.gif"',
+        ]);
     }
 }
