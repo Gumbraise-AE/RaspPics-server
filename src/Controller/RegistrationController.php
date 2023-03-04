@@ -77,7 +77,7 @@ class RegistrationController extends AbstractController
         // Enregistre le contenu dans un fichier à télécharger
         $filename = $this->getUser()->getEmail() . '.conf';
         return new Response($output, 200, [
-            'Content-Type' => 'text/plain',
+            'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);
     }
