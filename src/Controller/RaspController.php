@@ -49,14 +49,15 @@ class RaspController extends AbstractController
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
             $frame->readImage($imagePath);
             $frame->resizeImage(800, 600, Imagick::FILTER_LANCZOS, 1);
+            $frame->setImageCompression(Imagick::COMPRESSION_JPEG);
             $frame->setImageCompressionQuality(0);
             $frame->setImageDelay(10);
             $imagick->addImage($frame);
         }
 
         // Écrire le GIF dans une variable
+        $imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
         $imagick->setImageCompressionQuality(0);
-
         $gifData = $imagick->getImagesBlob();
 
         // Renvoyer le GIF en tant que réponse HTTP
