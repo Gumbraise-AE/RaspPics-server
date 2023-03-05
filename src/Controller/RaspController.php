@@ -89,7 +89,7 @@ class RaspController extends AbstractController
         }
 
         // Réduire le nombre de couleurs
-        $imagick->quantizeImage(128, Imagick::COLORSPACE_RGB, 0, false, false);
+        $imagick->quantizeImage(2, Imagick::COLORSPACE_RGB, 0, false, false);
 
         // Optimiser les frames
         $imagick->optimizeImageLayers();
