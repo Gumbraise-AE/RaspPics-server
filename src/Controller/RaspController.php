@@ -33,18 +33,44 @@ class RaspController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/gif', name: 'app_single_rasp_gif')]
+
+    #[Route('/{id}/gif/{freq}', name: 'app_single_rasp_gif', defaults: ['freq' => 'day'])]
     public function singleGif(
         RaspProject       $raspProject,
         RaspPicRepository $raspPicRepository,
         UploaderHelper    $uploaderHelper,
+                          $freq,
     ): Response
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_index');
         }
 
-        $raspPics = array_reverse($raspPicRepository->findBy(['raspProject' => $raspProject], ["createdAt" => "DESC"], 48));
+        $limit = 48;
+        $day = 1;
+
+        switch ($freq) {
+            default:
+            case 'day':
+                break;
+            case 'week':
+                $day = 7;
+                break;
+            case 'month':
+                $day = 31;
+                break;
+        }
+
+        $limit = $limit * $day;
+
+        $raspPicsAll = array_reverse($raspPicRepository->findBy(['raspProject' => $raspProject], ["createdAt" => "DESC"], $limit));
+
+        $raspPics = array();
+        foreach ($raspPicsAll as $key => $entity) {
+            if ($key % $day == 0) { // Si la clé est paire
+                $raspPics[] = $entity; // Ajouter l'entité au tableau filtré
+            }
+        }
 
         // Créer un objet Imagick pour créer le GIF
         $imagick = new Imagick();
