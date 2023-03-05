@@ -39,7 +39,9 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
-            dd(shell_exec('pivpn -a --name=' . $user->getEmail()));
+
+            $output = shell_exec('pivpn -a --name=' . $user->getEmail());
+            dd($output);
             return $this->redirectToRoute('app_index');
         }
 
