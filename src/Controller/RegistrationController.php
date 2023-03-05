@@ -70,12 +70,11 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_index');
         }
 
-
         // Récupère la sortie de la commande
         $output = file_get_contents('/home/vpn/configs/' . $this->getUser()->getEmail() . '.conf');
 
         // Enregistre le contenu dans un fichier à télécharger
-        $filename = $this->getUser()->getEmail() . '.conf';
+        $filename = 'rasppics.' . uniqid() . '.conf';
         return new Response($output, 200, [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
