@@ -41,7 +41,7 @@ class RegistrationController extends AbstractController
             // do anything else you need here, like send an email
             $cmd = 'sudo pivpn -a --name=' . $user->getEmail();
             exec($cmd, $output, $retval);
-            dd($output, $retval);
+            dd($cmd, $output, $retval);
             return $this->redirectToRoute('app_index');
         }
 
