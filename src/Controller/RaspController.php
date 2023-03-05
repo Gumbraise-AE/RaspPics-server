@@ -88,6 +88,12 @@ class RaspController extends AbstractController
             $imagick->addImage($frame);
         }
 
+        // Réduire le nombre de couleurs
+        $imagick->quantizeImage(128, Imagick::COLORSPACE_RGB, 0, false, false);
+
+        // Optimiser les frames
+        $imagick->optimizeImageLayers();
+
         // Écrire le GIF dans une variable
         $imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
         $imagick->setImageCompressionQuality(80);
