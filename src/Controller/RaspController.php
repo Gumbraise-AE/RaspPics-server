@@ -84,7 +84,7 @@ class RaspController extends AbstractController
             $imagePath = $publicPath . $uploaderHelper->asset($raspPic, 'picFile');
             $frame->readImage($imagePath);
             $frame->resizeImage(800, 600, Imagick::FILTER_LANCZOS, 1);
-            $frame->quantizeImage(2, Imagick::COLORSPACE_RGB, 0, false, false);
+            $frame->quantizeImage(64, Imagick::COLORSPACE_RGB, 0, false, false);
             $frame->optimizeImageLayers();
             $frame->setImageCompression(Imagick::COMPRESSION_JPEG);
             $frame->setImageCompressionQuality(80);
@@ -93,7 +93,7 @@ class RaspController extends AbstractController
         }
 
         // Réduire le nombre de couleurs
-        $imagick->quantizeImage(2, Imagick::COLORSPACE_RGB, 0, false, false);
+        $imagick->quantizeImage(64, Imagick::COLORSPACE_RGB, 0, false, false);
 
         // Optimiser les frames
         $imagick->optimizeImageLayers();
