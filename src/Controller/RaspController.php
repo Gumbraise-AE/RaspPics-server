@@ -86,6 +86,7 @@ class RaspController extends AbstractController
             $frame->resizeImage(800, 600, Imagick::FILTER_LANCZOS, 1);
             $frame->setImageFormat('webp');
             $frame->setImageCompressionQuality(80);
+            $frame->writeImage('image.webp');
             $frame->setImageDelay(10);
             $imagick->addImage($frame);
         }
