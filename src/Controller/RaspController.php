@@ -32,7 +32,7 @@ class RaspController extends AbstractController
         return $this->render('rasp/single.html.twig', [
             'controller_name' => 'RaspController',
             'rasp' => $raspProject,
-            'rasp.raspPics' => $raspPicRepository->findBy(['raspProject' => $raspProject, ['createdAt' => 'DESC'], 48),
+            'rasp.raspPics' => $raspPicRepository->findBy(['raspProject' => $raspProject], ['createdAt' => 'DESC'], 48),
             'user_ip' => $_SERVER['REMOTE_ADDR']
         ]);
     }
