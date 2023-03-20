@@ -115,7 +115,7 @@
                 <h2 class="text-3xl md:text-5xl font-bold pb-6 word-break text-center md:text-left">Last pictures
                     of {{ rasp.title }}</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {% for rasppic in rasp.raspPics %}
+                    {% for rasppic in raspPics %}
                         <a href="{{ vich_uploader_asset(rasppic, 'picFile') }}" data-lightbox="picfile">
                             <figure>
                                 <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" class="w-full"
