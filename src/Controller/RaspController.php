@@ -20,7 +20,10 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 class RaspController extends AbstractController
 {
     #[Route('/{id}', name: 'app_single_rasp')]
-    public function single(RaspProject $raspProject): Response
+    public function single(
+        RaspProject       $raspProject,
+        RaspPicRepository $raspPicRepository,
+    ): Response
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
@@ -29,6 +32,7 @@ class RaspController extends AbstractController
         return $this->render('rasp/single.html.twig', [
             'controller_name' => 'RaspController',
             'rasp' => $raspProject,
+            'rasp.raspPics' => $raspPicRepository->findBy(['raspProject' => $raspProject, ['createdAt' => 'DESC'], 48),
             'user_ip' => $_SERVER['REMOTE_ADDR']
         ]);
     }
