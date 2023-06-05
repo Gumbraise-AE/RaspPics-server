@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\RaspProject;
 use App\Repository\RaspPicRepository;
 use Imagick;
+use ImagickException;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -38,6 +39,9 @@ class RaspController extends AbstractController
     }
 
 
+    /**
+     * @throws ImagickException
+     */
     #[Route('/{id}/gif/{freq}', name: 'app_single_rasp_gif', defaults: ['freq' => 'day'])]
     public function singleGif(
         RaspProject       $raspProject,
@@ -110,7 +114,7 @@ class RaspController extends AbstractController
         // Renvoyer le GIF en tant que réponse HTTP
         return new Response($gifData, 200, [
             'Content-Type' => 'image/gif',
-            'Content-Disposition' => 'attachment; filename="raspPics.gif"',
+            'Content-Disposition' => 'attachment; filename="raspPics-' . $freq . '-' . date('c') . '.gif"',
         ]);
     }
 }
