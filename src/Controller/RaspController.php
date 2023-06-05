@@ -71,6 +71,10 @@ class RaspController extends AbstractController
 
         $limit = $limit * $day;
 
+        if ($freq == 'month-special') {
+            $limit = 900;
+        }
+
         $raspPicsAll = array_reverse($raspPicRepository->findBy(['raspProject' => $raspProject], ["createdAt" => "DESC"], $limit));
 
         $raspPics = array();
