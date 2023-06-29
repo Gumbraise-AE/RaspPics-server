@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\RaspPic;
 use App\Entity\RaspProject;
 use App\Repository\RaspPicRepository;
 use Imagick;
@@ -37,7 +38,6 @@ class RaspController extends AbstractController
             'user_ip' => $_SERVER['REMOTE_ADDR']
         ]);
     }
-
 
     /**
      * @throws ImagickException

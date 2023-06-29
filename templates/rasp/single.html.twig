@@ -16,7 +16,17 @@
                 <img src="{{ vich_uploader_asset(rasp.raspPics[0], 'picFile') }}"
                      class="w-full blur-3xl absolute -z-10" alt="Last pic of {{ rasp.title }}">
                 <div>
-                    <div id="raspStream" class="block">
+                    <div
+                            id="raspStream"
+                            class="block"
+                            {{ stimulus_controller('videolive', {
+                                livePath: videoPath,
+                                userIp: user_ip,
+                                externIp: rasp.externIP,
+                                gifPath: path('app_single_rasp_gif', {'id': rasp.id}),
+                                picPath: vich_uploader_asset(rasp.raspPics[0], 'picFile'),
+                            }) }}
+                    >
                         <div class="bg-pourpre py-2 px-6 relative rounded-t-xl inline-flex gap-2 w-full items-baseline">
                             <span class="relative flex h-3 w-3 self-center">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pourpre-light opacity-75"></span>
@@ -24,89 +34,31 @@
                             </span>
                             <h2 class="text-xs text-pourpre-light">Live video</h2>
                         </div>
-                        <video src="{{ videoPath }}"
-                               class="w-full"
-                               controls
-                               autoplay
-                               muted
+                        <video
+                                {{ stimulus_target('videolive', 'video') }}
+                                src="{{ videoPath }}"
+                                class="w-full rounded-b-lg"
+                                controls
+                                autoplay
+                                muted
                         ></video>
-                        <div class="relative w-full grid grid-cols-2">
-                            <button onclick="seeLastPic()"
-                                    class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-bl-lg py-2 duration-100">
-                                Look at the last pic
+                        <img
+                                {{ stimulus_target('videolive', 'image') }}
+                                src="{{ vich_uploader_asset(rasp.raspPics[0], 'picFile') }}"
+                                alt="Last pic of {{ rasp.title }}"
+                                class="w-full hidden rounded-b-lg"
+                        >
+                        <div class="relative w-full grid grid-cols-2 pt-4 divide-x divide-gray-700">
+                            <button
+                                    {{ stimulus_target('videolive', 'firstButton') }}
+                                    class="uppercase rounded-l-full bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white text-xs p-4 duration-100">
+                                WATCH THE PIC
                             </button>
-                            <button onclick="discardDisconnectedLiveMessage()"
-                                    disabled
-                                    class="bg-lime-900 hover:bg-lime-800 text-lime-400 text-xs rounded-br-lg py-2 duration-100">
-                                OMG WHAT HAPPENED ?
+                            <button
+                                    {{ stimulus_target('videolive', 'secondButton') }}
+                                    class="uppercase rounded-r-full bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white text-xs p-4 duration-100">
+                                WATCH THE DAY GIF
                             </button>
-                        </div>
-                    </div>
-                    <div id="raspLastPicContainer" class="hidden h-min relative">
-                        <div id="disconnectedLiveMessage"
-                             class="bg-white/10 w-full h-full backdrop-blur-xl absolute z-10 rounded-xl items-center justify-center flex text-black p-4">
-                            <div class="text-center space-y-4 w-full">
-                                <p class="text-3xl font-bold">You've been disconnected from the live video</p>
-                                <p class="text-xl">The bandwidth is not free</p>
-                                <div class="grid grid-cols-2 w-1/2 mx-auto pt-8">
-                                    <button id="buttonGoBackLive"
-                                            onclick="playVideo()"
-                                            class="bg-pourpre-400 hover:bg-pourpre-300 text-pourpre-light text-xs rounded-l-lg py-2 duration-100">
-                                        Go back to live
-                                    </button>
-                                    <button id="buttonLookLastPic"
-                                            onclick="discardDisconnectedLiveMessage()"
-                                            class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-r-lg py-2 duration-100">
-                                        Look at the last pic
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="noVPNMessage"
-                             class="bg-white/10 w-full h-full backdrop-blur-xl absolute z-10 rounded-xl items-center justify-center flex text-black p-4">
-                            <div class="text-center space-y-4 w-full">
-                                <p class="text-3xl font-bold">It seems you don't have VPN</p>
-                                <p class="text-xl">Without it you can't watch the live</p>
-                                <p>
-                                    <a class="underline" target="_blank" href="https://www.wireguard.com/">Download
-                                        WireGuard</a>
-                                    •
-                                    <a class="underline" target="_blank" href="{{ path('app_getvpnkey') }}">Download my
-                                        secret key</a>
-                                </p>
-                                <div class="grid grid-cols-2 w-1/2 mx-auto pt-8">
-                                    <button onclick="seeLastPic()"
-                                            class="bg-cyan-900 hover:bg-cyan-800 text-cyan-400 text-xs rounded-l-lg py-2 duration-100">
-                                        Look at the last pic
-                                    </button>
-                                    <button onclick="discardDisconnectedLiveMessage()"
-                                            disabled
-                                            class="bg-lime-900 hover:bg-lime-800 text-lime-400 text-xs rounded-r-lg py-2 duration-100">
-                                        OMG WHAT HAPPENED ?
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div id="raspLastPic">
-                            <div class="bg-cyan-900 py-2 px-6 relative rounded-t-xl inline-flex gap-2 w-full items-baseline">
-                                <p class="text-xs text-cyan-400">Last picture of {{ rasp.title }}</p>
-                            </div>
-                            <img src="{{ vich_uploader_asset(rasp.raspPics[0], 'picFile') }}"
-                                 alt="Last pic of {{ rasp.title }}"
-                                 class="w-full"
-                            >
-                            <div class="relative w-full grid grid-cols-2">
-                                <button onclick="playVideo()"
-                                        class="bg-pourpre-400 hover:bg-pourpre-300 text-pourpre-light text-xs rounded-bl-lg py-2 duration-100">
-                                    Go back to live
-                                </button>
-                                <button onclick="discardDisconnectedLiveMessage()"
-                                        disabled
-                                        class="bg-lime-900 hover:bg-lime-800 text-lime-400 text-xs rounded-br-lg py-2 duration-100">
-                                    OMG WHAT HAPPENED ?
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -116,80 +68,25 @@
                     of {{ rasp.title }}</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {% for rasppic in raspPics %}
-                        <a href="{{ vich_uploader_asset(rasppic, 'picFile') }}" data-lightbox="picfile">
+                        <a
+                                href="{{ vich_uploader_asset(rasppic, 'picFile') }}"
+                                data-lightbox="picfile"
+                                {{ stimulus_controller('tippy', {
+                                    text: rasppic.createdAt|date('D, d M Y H:i:s'),
+                                }) }}
+                        >
                             <figure>
-                                <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" class="w-full"
+                                <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" class="w-full rounded-xl"
                                      alt="{{ rasppic.createdAt|date('D, d M Y H:i:s') }}">
-                                <figcaption class="text-xs">{{ rasppic.createdAt|date('D, d M Y H:i:s') }}</figcaption>
                             </figure>
                         </a>
                     {% endfor %}
                 </div>
             </div>
         </div>
-
-
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.min.js"
             integrity="sha512-U9dKDqsXAE11UA9kZ0XKFyZ2gQCj+3AwZdBMni7yXSvWqLFEj8C1s7wRmWl9iyij8d5zb4wm56j4z/JVEwS77g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        let timeoutId;
-        let isPassed = false;
-        let raspStreamVideo = raspStream.getElementsByTagName('video')[0];
-
-        const discardDisconnectedLiveMessage = () => {
-            clearTimeout(timeoutId);
-            disconnectedLiveMessage.classList.add('hidden');
-        };
-
-        const seeLastPic = () => {
-            clearTimeout(timeoutId);
-            isPassed = true;
-            raspStream.classList.add('hidden');
-            raspLastPicContainer.classList.remove('hidden');
-            noVPNMessage.classList.add('hidden');
-            disconnectedLiveMessage.classList.add('hidden');
-        };
-
-        const pauseVideo = () => {
-            clearTimeout(timeoutId);
-            if (isPassed === false) {
-                timeoutId = setTimeout(function () {
-                    isPassed = true;
-                    raspStream.classList.add('hidden');
-                    raspLastPicContainer.classList.remove('hidden');
-                    disconnectedLiveMessage.classList.remove('hidden');
-                    raspStreamVideo.src = "";
-                }, 5 * 60000);
-            }
-        };
-
-        const playVideo = () => {
-            clearTimeout(timeoutId);
-            if (isPassed === true) {
-                isPassed = false;
-                raspStream.classList.remove('hidden');
-                raspLastPicContainer.classList.add('hidden');
-                raspStreamVideo.src = "{{ videoPath }}";
-                raspStreamVideo.play();
-            }
-        };
-
-        document.addEventListener('mousemove', () => {
-            pauseVideo();
-        });
-
-        window.onload = () => {
-            if (!("{{ user_ip }}" === "10.241.249.5" || "{{ user_ip }}" === "127.0.0.1" || "{{ user_ip }}" === "{{ rasp.externIP }}")) {
-                raspStream.classList.add('hidden');
-                raspLastPicContainer.classList.remove('hidden');
-                noVPNMessage.classList.remove('hidden');
-                raspStreamVideo.src = "";
-            }
-            pauseVideo();
-        }
-
-    </script>
 {% endblock %}
