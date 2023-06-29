@@ -1,0 +1,13 @@
+<a
+        href="{{ link }}"
+        data-lightbox="picfile"
+        {{ stimulus_controller('tippy', {
+            text: text,
+        }) }}
+>
+    <figure>
+        <img src="{{ vich_uploader_asset(pic, 'picFile') }}"
+             class="w-full rounded-xl"
+             alt="{{ text }}">
+    </figure>
+</a>

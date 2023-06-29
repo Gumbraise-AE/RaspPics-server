@@ -49,11 +49,20 @@ class RaspProject
     #[ORM\Column(nullable: true)]
     private ?int $socketPort = null;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'authorizedRasps')]
+    private Collection $authorizedUsers;
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->raspPics = new ArrayCollection();
+        $this->authorizedUsers = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -205,6 +214,30 @@ class RaspProject
     public function setSocketPort(?int $socketPort): self
     {
         $this->socketPort = $socketPort;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getAuthorizedUsers(): Collection
+    {
+        return $this->authorizedUsers;
+    }
+
+    public function addAuthorizedUser(User $authorizedUser): self
+    {
+        if (!$this->authorizedUsers->contains($authorizedUser)) {
+            $this->authorizedUsers->add($authorizedUser);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthorizedUser(User $authorizedUser): self
+    {
+        $this->authorizedUsers->removeElement($authorizedUser);
 
         return $this;
     }

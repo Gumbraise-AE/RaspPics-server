@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\RaspProject;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,16 @@ class RaspProjectRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByAuthorizatedUser(User $user): mixed
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere(':user MEMBER OF r.authorizedUsers')
+            ->setParameter('user', $user)
+            ->orderBy('r.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

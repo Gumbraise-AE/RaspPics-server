@@ -28,6 +28,16 @@ class RaspAuthorization
     #[ORM\OneToOne(inversedBy: 'raspAuthorization', cascade: ['persist', 'remove'])]
     private ?RaspProject $raspProject = null;
 
+    #[ORM\ManyToOne(inversedBy: 'raspAuthorizations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -77,6 +87,18 @@ class RaspAuthorization
     public function setRaspProject(?RaspProject $raspProject): self
     {
         $this->raspProject = $raspProject;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

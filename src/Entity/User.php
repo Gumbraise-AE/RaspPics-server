@@ -36,9 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: RaspProject::class, orphanRemoval: true)]
     private Collection $raspProjects;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: RaspAuthorization::class)]
+    private Collection $raspAuthorizations;
+
+    #[ORM\ManyToMany(targetEntity: RaspProject::class, mappedBy: 'authorizedUsers')]
+    private Collection $authorizedRasps;
+
     public function __construct()
     {
         $this->raspProjects = new ArrayCollection();
+        $this->raspAuthorizations = new ArrayCollection();
+        $this->authorizedRasps = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -136,6 +144,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($raspProject->getAuthor() === $this) {
                 $raspProject->setAuthor(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RaspAuthorization>
+     */
+    public function getRaspAuthorizations(): Collection
+    {
+        return $this->raspAuthorizations;
+    }
+
+    public function addRaspAuthorization(RaspAuthorization $raspAuthorization): self
+    {
+        if (!$this->raspAuthorizations->contains($raspAuthorization)) {
+            $this->raspAuthorizations->add($raspAuthorization);
+            $raspAuthorization->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRaspAuthorization(RaspAuthorization $raspAuthorization): self
+    {
+        if ($this->raspAuthorizations->removeElement($raspAuthorization)) {
+            // set the owning side to null (unless already changed)
+            if ($raspAuthorization->getUser() === $this) {
+                $raspAuthorization->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RaspProject>
+     */
+    public function getAuthorizedRasps(): Collection
+    {
+        return $this->authorizedRasps;
+    }
+
+    public function addAuthorizedRasp(RaspProject $authorizedRasp): self
+    {
+        if (!$this->authorizedRasps->contains($authorizedRasp)) {
+            $this->authorizedRasps->add($authorizedRasp);
+            $authorizedRasp->addAuthorizedUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthorizedRasp(RaspProject $authorizedRasp): self
+    {
+        if ($this->authorizedRasps->removeElement($authorizedRasp)) {
+            $authorizedRasp->removeAuthorizedUser($this);
         }
 
         return $this;

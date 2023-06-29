@@ -31,8 +31,11 @@ class RaspController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        if (!$raspProject->getAuthorizedUsers()->contains($this->getUser()) && $this->getUser() !== $raspProject->getAuthor()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         return $this->render('rasp/single.html.twig', [
-            'controller_name' => 'RaspController',
             'rasp' => $raspProject,
             'raspPics' => $raspPicRepository->findBy(['raspProject' => $raspProject], ['createdAt' => 'DESC'], 48),
             'user_ip' => $_SERVER['REMOTE_ADDR']
@@ -51,7 +54,7 @@ class RaspController extends AbstractController
     ): Response
     {
         if (!$this->getUser()) {
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_login');
         }
 
         $limit = 48;
@@ -118,7 +121,7 @@ class RaspController extends AbstractController
         // Renvoyer le GIF en tant que réponse HTTP
         return new Response($gifData, 200, [
             'Content-Type' => 'image/gif',
-            'Content-Disposition' => 'attachment; filename="raspPics-' . $freq . '-' . date('c') . '.gif"',
+            'Content-Disposition' => 'filename="raspPics-' . $freq . '-' . date('c') . '.gif"',
         ]);
     }
 }

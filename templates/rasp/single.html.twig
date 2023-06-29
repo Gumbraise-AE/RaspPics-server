@@ -68,18 +68,11 @@
                     of {{ rasp.title }}</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {% for rasppic in raspPics %}
-                        <a
-                                href="{{ vich_uploader_asset(rasppic, 'picFile') }}"
-                                data-lightbox="picfile"
-                                {{ stimulus_controller('tippy', {
-                                    text: rasppic.createdAt|date('D, d M Y H:i:s'),
-                                }) }}
-                        >
-                            <figure>
-                                <img src="{{ vich_uploader_asset(rasppic, 'picFile') }}" class="w-full rounded-xl"
-                                     alt="{{ rasppic.createdAt|date('D, d M Y H:i:s') }}">
-                            </figure>
-                        </a>
+                        {{ include('_include/pic.html.twig', {
+                            link: vich_uploader_asset(rasppic, 'picFile'),
+                            pic: rasppic,
+                            text: rasppic.createdAt|date('D, d M Y H:i:s'),
+                        }) }}
                     {% endfor %}
                 </div>
             </div>
