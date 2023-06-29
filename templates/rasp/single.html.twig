@@ -68,11 +68,21 @@
                     of {{ rasp.title }}</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {% for rasppic in raspPics %}
-                        {{ include('_include/pic.html.twig', {
-                            link: vich_uploader_asset(rasppic, 'picFile'),
-                            pic: rasppic,
-                            text: rasppic.createdAt|date('D, d M Y H:i:s'),
-                        }) }}
+                        <div
+                                {{ app.user == rasp.author ? stimulus_controller('confirm-delete', {
+                                    title: "Delete this pic ?",
+                                    text: "Are you sure you want to delete this pic ?",
+                                    icon: "warning",
+                                    confirmationButtonText: "Delete",
+                                    urlDelete: path('app_delete_rasp_pic', {'id': rasppic.id}),
+                                }) }}
+                        >
+                            {{ include('_include/pic.html.twig', {
+                                link: vich_uploader_asset(rasppic, 'picFile'),
+                                pic: rasppic,
+                                text: rasppic.createdAt|date('D, d M Y H:i:s'),
+                            }) }}
+                        </div>
                     {% endfor %}
                 </div>
             </div>

@@ -42,6 +42,25 @@ class RaspController extends AbstractController
         ]);
     }
 
+    #[Route('/pics/{id}', name: 'app_delete_rasp_pic', methods: ['DELETE'])]
+    public function deleteRaspPic(
+        RaspPic           $raspPic,
+        RaspPicRepository $raspPicRepository,
+    ): Response
+    {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($this->getUser() !== $raspPic->getRaspProject()->getAuthor()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $raspPicRepository->remove($raspPic, true);
+
+        return new Response();
+    }
+
     /**
      * @throws ImagickException
      */
@@ -54,6 +73,10 @@ class RaspController extends AbstractController
     ): Response
     {
         if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$raspProject->getAuthorizedUsers()->contains($this->getUser()) && $this->getUser() !== $raspProject->getAuthor()) {
             return $this->redirectToRoute('app_login');
         }
 
